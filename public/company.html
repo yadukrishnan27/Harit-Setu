@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Company Portal – Harit Setu Carbon Credits</title>
+  <meta name="robots" content="noindex" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="company.css" />
+</head>
+<body>
+
+  <!-- AUTH LOADER -->
+  <div id="authLoader" class="c-auth-loader">
+    <div class="c-loader-content">
+      <span class="c-loader-icon">🏢</span>
+      <p>Verifying company credentials…</p>
+      <div class="c-loader-bar"><div class="c-loader-fill"></div></div>
+    </div>
+  </div>
+
+  <!-- MAIN PORTAL -->
+  <div id="companyApp" class="c-app hidden">
+
+    <!-- HEADER -->
+    <header class="c-header">
+      <div class="c-header-left">
+        <a href="index.html" class="c-logo">
+          <span>🌿</span> Harit Setu
+        </a>
+        <span class="c-breadcrumb">/ Company Portal</span>
+      </div>
+      <div class="c-header-right">
+        <div class="c-live-badge"><span class="c-live-dot"></span> Market Open</div>
+        <div class="c-price-ticker">
+          <span class="c-ticker-label">HSIA7 (Agri Credit)</span>
+          <span class="c-ticker-price" id="tickerPrice">₹487</span>
+          <span class="c-ticker-change positive" id="tickerChange">▲ 2.3%</span>
+        </div>
+        <div class="c-user-info" id="cUserInfo">
+          <div class="c-avatar" id="cAvatar">T</div>
+          <div class="c-user-text">
+            <span class="c-user-name" id="cUserName">Company</span>
+            <span class="c-user-sub">Corporate Account</span>
+          </div>
+        </div>
+        <button class="c-sign-out" id="cSignOutBtn">Sign Out</button>
+      </div>
+    </header>
+
+    <!-- TABS -->
+    <nav class="c-tabs">
+      <button class="c-tab active" data-tab="overview">📊 Overview</button>
+      <button class="c-tab" data-tab="marketplace">🛒 Marketplace</button>
+      <button class="c-tab" data-tab="portfolio">📁 My Portfolio</button>
+      <button class="c-tab" data-tab="esg">📋 ESG Reports</button>
+      <button class="c-tab" data-tab="api" id="apiTabBtn" style="display: none;">⚙️ API & Integration</button>
+    </nav>
+
+    <!-- ===== OVERVIEW ===== -->
+    <section class="c-tab-content active" id="c-tab-overview">
+      <div class="c-container">
+
+        <div class="c-welcome">
+          <div>
+            <h1>Welcome back, <span id="cWelcomeName">Company</span> 👋</h1>
+            <p>Your Net Zero journey at a glance · FY 2024–25</p>
+          </div>
+          <div class="c-alert-badge" id="expiryAlert">
+            ⚠️ 240t credits expiring in 42 days
+          </div>
+        </div>
+
+        <!-- KPI GRID -->
+        <div class="c-kpi-grid">
+          <div class="c-kpi blue">
+            <div class="c-kpi-left">
+              <span class="c-kpi-label">Net Zero Progress</span>
+              <span class="c-kpi-value" id="kpi-nz">68%</span>
+              <span class="c-kpi-sub">of FY25 target offset</span>
+            </div>
+            <div class="c-progress-ring-wrap">
+              <svg class="c-ring" viewBox="0 0 80 80">
+                <circle cx="40" cy="40" r="32" fill="none" stroke="rgba(59,130,246,0.15)" stroke-width="8"/>
+                <circle id="nzRing" cx="40" cy="40" r="32" fill="none" stroke="#3b82f6" stroke-width="8"
+                  stroke-linecap="round" stroke-dasharray="201" stroke-dashoffset="64"
+                  transform="rotate(-90 40 40)"/>
+                <text x="40" y="44" text-anchor="middle" font-size="13" font-weight="800" fill="#60a5fa">68%</text>
+              </svg>
+            </div>
+          </div>
+          <div class="c-kpi">
+            <div class="c-kpi-icon">🌍</div>
+            <div class="c-kpi-body">
+              <span class="c-kpi-label">Total CO₂ Offset</span>
+              <span class="c-kpi-value" id="kpi-co2">0 t</span>
+              <span class="c-kpi-sub positive">▲ 18.4% vs last quarter</span>
+            </div>
+          </div>
+          <div class="c-kpi">
+            <div class="c-kpi-icon">💳</div>
+            <div class="c-kpi-body">
+              <span class="c-kpi-label">Credits in Wallet</span>
+              <span class="c-kpi-value" id="kpi-wallet">0 t</span>
+              <span class="c-kpi-sub">Ready to retire</span>
+            </div>
+          </div>
+          <div class="c-kpi">
+            <div class="c-kpi-icon">💰</div>
+            <div class="c-kpi-body">
+              <span class="c-kpi-label">Annual Spend</span>
+              <span class="c-kpi-value" id="kpi-spend">₹0</span>
+              <span class="c-kpi-sub">FY 2024–25</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CHARTS ROW -->
+        <div class="c-charts-row">
+          <!-- Emissions vs Offset Donut -->
+          <div class="c-card">
+            <div class="c-card-header">
+              <h3>Emissions vs. Offset (tCO₂)</h3>
+              <span class="c-chip blue">GHG Protocol</span>
+            </div>
+            <div class="c-donut-wrap">
+              <canvas id="emissionsDonut" height="200"></canvas>
+              <div class="c-donut-legend">
+                <div class="c-legend-item"><span style="background:#ef4444"></span> Scope 1 — 38,000t</div>
+                <div class="c-legend-item"><span style="background:#f59e0b"></span> Scope 2 — 52,000t</div>
+                <div class="c-legend-item"><span style="background:#a78bfa"></span> Scope 3 — 52,000t</div>
+                <div class="c-legend-item"><span style="background:#22c55e"></span> Offset — 96,540t</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Monthly Spend Chart -->
+          <div class="c-card">
+            <div class="c-card-header">
+              <h3>Monthly Offset Spend (₹)</h3>
+              <span class="c-chip blue">FY 2024–25</span>
+            </div>
+            <canvas id="spendChart" height="160"></canvas>
+          </div>
+
+          <!-- Scope Breakdown -->
+          <div class="c-card">
+            <div class="c-card-header">
+              <h3>Scope Coverage</h3>
+              <span class="c-chip green">SBTi Aligned</span>
+            </div>
+            <div class="c-scope-bars">
+              <div class="c-scope-row">
+                <span>Scope 1</span>
+                <div class="c-scope-bar-wrap">
+                  <div class="c-scope-bar-fill" style="width:100%;background:#ef4444"></div>
+                  <div class="c-scope-bar-offset" style="width:100%;background:#22c55e"></div>
+                </div>
+                <span class="c-scope-pct" style="color:#22c55e">100% offset</span>
+              </div>
+              <div class="c-scope-row">
+                <span>Scope 2</span>
+                <div class="c-scope-bar-wrap">
+                  <div class="c-scope-bar-fill" style="width:100%;background:#f59e0b"></div>
+                  <div class="c-scope-bar-offset" style="width:74%;background:#22c55e"></div>
+                </div>
+                <span class="c-scope-pct" style="color:#f59e0b">74% offset</span>
+              </div>
+              <div class="c-scope-row">
+                <span>Scope 3</span>
+                <div class="c-scope-bar-wrap">
+                  <div class="c-scope-bar-fill" style="width:100%;background:#a78bfa"></div>
+                  <div class="c-scope-bar-offset" style="width:31%;background:#22c55e"></div>
+                </div>
+                <span class="c-scope-pct" style="color:#ef4444">31% offset — Gap!</span>
+              </div>
+            </div>
+            <div class="c-net-zero-target">
+              <span>🎯 Net Zero Target:</span>
+              <strong>2040</strong>
+              <span class="c-sbti-badge">SBTi Verified</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- RECENT PURCHASES -->
+        <div class="c-card">
+          <div class="c-card-header">
+            <h3>Recent Purchases</h3>
+            <button class="c-view-all" data-goto="portfolio">View Portfolio →</button>
+          </div>
+          <div class="c-table">
+            <div class="c-table-head">
+              <span>Date</span><span>Credit ID</span><span>Farmer</span><span>Region</span><span>CO₂ (t)</span><span>Price</span><span>Status</span>
+            </div>
+            <div id="recentPurchases"></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===== MARKETPLACE ===== -->
+    <section class="c-tab-content" id="c-tab-marketplace">
+      <div class="c-container">
+        <div class="c-tab-header">
+          <h2>🛒 Carbon Credit Marketplace</h2>
+          <p>Browse verified agri-carbon credits from ISRO-monitored farms across India. All credits are Verra-compatible and blockchain-minted on Polygon.</p>
+        </div>
+
+        <!-- MARKET STATS BAR -->
+        <div class="c-market-stats-bar">
+          <div class="c-mstat"><span>Total Available</span><strong id="mktAvailable">0 t CO₂</strong></div>
+          <div class="c-mstat"><span>Avg Price</span><strong>₹487/t</strong></div>
+          <div class="c-mstat"><span>Avg NDVI Score</span><strong>0.74</strong></div>
+          <div class="c-mstat"><span>Sold Today</span><strong>1,240 t</strong></div>
+          <div class="c-mstat"><span>Verra Verified</span><strong>100%</strong></div>
+        </div>
+
+        <!-- FILTER BAR -->
+        <div class="c-filter-bar">
+          <select class="c-filter-select" id="filterRegion">
+            <option value="">All Regions</option>
+            <option>Kerala</option><option>Tamil Nadu</option><option>Andhra Pradesh</option>
+            <option>Maharashtra</option><option>Punjab</option><option>Bihar</option>
+          </select>
+          <select class="c-filter-select" id="filterCrop">
+            <option value="">All Crops</option>
+            <option>Paddy</option><option>Coconut</option><option>Sugarcane</option>
+            <option>Wheat</option><option>Cotton</option>
+          </select>
+          <select class="c-filter-select" id="filterPrice">
+            <option value="">Any Price</option>
+            <option>Under ₹400/t</option><option>₹400–₹500/t</option><option>₹500+/t</option>
+          </select>
+          <label class="c-toggle-label">
+            <input type="checkbox" id="filterVerra" checked /> Verra Verified Only
+          </label>
+          <label class="c-toggle-label">
+            <input type="checkbox" id="filterNdvi" /> High NDVI (0.7+) Only
+          </label>
+          <button class="c-filter-reset" id="filterReset">Reset</button>
+        </div>
+
+        <!-- CREDITS GRID -->
+        <div class="c-credits-grid" id="creditsGrid"><!-- Filled by JS --></div>
+
+        <!-- BUY MODAL -->
+        <div id="buyModal" class="c-buy-modal hidden">
+          <div class="c-buy-modal-inner">
+            <button class="c-modal-close" id="closeBuyModal">✕</button>
+            <h3>Purchase Carbon Credits</h3>
+            <div class="c-buy-farmer-info" id="buyFarmerInfo"></div>
+            <div class="c-buy-form">
+              <label>Quantity (tonnes CO₂)</label>
+              <div class="c-qty-row">
+                <button class="c-qty-btn" id="qtyMinus">−</button>
+                <input type="number" id="qtyInput" value="10" min="1" class="c-qty-input" />
+                <button class="c-qty-btn" id="qtyPlus">+</button>
+              </div>
+              <div class="c-buy-summary" id="buySummary"></div>
+              <button class="c-btn-buy-confirm" id="confirmBuyBtn">✅ Confirm Purchase</button>
+            </div>
+            <p class="c-buy-note">Credits will appear in My Portfolio within 30 seconds · Polygon receipt generated automatically</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===== PORTFOLIO ===== -->
+    <section class="c-tab-content" id="c-tab-portfolio">
+      <div class="c-container">
+        <div class="c-tab-header">
+          <h2>📁 My Portfolio</h2>
+          <p>All carbon credits owned, retired, and pending. Use "Retire" to permanently cancel credits toward your Net Zero claim.</p>
+        </div>
+
+        <!-- PORTFOLIO BANNER -->
+        <div class="c-portfolio-banner">
+          <div class="c-pb-stat">
+            <span>Total Purchased</span>
+            <strong id="pbTotal">0 t</strong>
+          </div>
+          <div class="c-pb-stat">
+            <span>Retired (Used)</span>
+            <strong id="pbRetired" style="color:#22c55e">0 t</strong>
+          </div>
+          <div class="c-pb-stat">
+            <span>Available in Wallet</span>
+            <strong id="pbAvail" style="color:#60a5fa">0 t</strong>
+          </div>
+          <div class="c-pb-stat">
+            <span>Expiring (&lt;90 days)</span>
+            <strong id="pbExpiring" style="color:#f59e0b">240 t</strong>
+          </div>
+          <div class="c-pb-stat">
+            <span>Total Value</span>
+            <strong id="pbValue">₹0</strong>
+          </div>
+        </div>
+
+        <!-- CHARTS -->
+        <div class="c-two-col">
+          <div class="c-card">
+            <div class="c-card-header"><h3>Monthly Spend (₹)</h3><span class="c-chip blue">12 Months</span></div>
+            <canvas id="portfolioSpendChart" height="120"></canvas>
+          </div>
+          <div class="c-card">
+            <div class="c-card-header"><h3>Price Per Tonne Trend (₹)</h3><span class="c-chip blue">Market Rate</span></div>
+            <canvas id="priceChart" height="120"></canvas>
+          </div>
+        </div>
+
+        <!-- PORTFOLIO TABLE -->
+        <div class="c-card">
+          <div class="c-card-header">
+            <h3>Credit Ledger</h3>
+            <div style="display:flex;gap:.5rem">
+              <button class="c-chip blue" style="cursor:pointer;border:none" id="retireSelectedBtn">Retire Selected</button>
+              <span class="c-chip">FY 2024–25</span>
+            </div>
+          </div>
+          <div class="c-table" style="overflow-x:auto">
+            <div class="c-table-head c-portfolio-head">
+              <span><input type="checkbox" id="checkAll" /></span>
+              <span>Credit ID</span><span>Farmer</span><span>Region</span>
+              <span>CO₂ (t)</span><span>NDVI</span><span>Price (₹)</span>
+              <span>Vintage</span><span>Status</span><span>Action</span>
+            </div>
+            <div id="portfolioTableBody"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== ESG REPORTS ===== -->
+    <section class="c-tab-content" id="c-tab-esg">
+      <div class="c-container">
+        <div class="c-tab-header">
+          <h2>📋 ESG Reports & Certificates</h2>
+          <p>Board-ready ESG documentation, Verra-format retirement certificates, ISRO satellite-verified impact reports, and farmer impact stories.</p>
+        </div>
+
+        <!-- IMPACT SUMMARY -->
+        <div class="c-impact-banner">
+          <div class="c-impact-stat"><span>🌍</span><strong id="esgCo2">96,540 t</strong><span>CO₂ Offset</span></div>
+          <div class="c-impact-stat"><span>👨‍🌾</span><strong>2,847</strong><span>Farmers Supported</span></div>
+          <div class="c-impact-stat"><span>🗺️</span><strong>8 States</strong><span>Coverage</span></div>
+          <div class="c-impact-stat"><span>🎯</span><strong>6 SDGs</strong><span>Aligned</span></div>
+          <div class="c-impact-stat"><span>⛓️</span><strong>198</strong><span>Credits Retired</span></div>
+        </div>
+
+        <!-- CERTIFICATE GALLERY -->
+        <div class="c-card">
+          <div class="c-card-header"><h3>Downloadable Reports</h3><span class="c-chip green">All Audit-Ready</span></div>
+          <div class="c-cert-grid">
+            <div class="c-cert-card">
+              <div class="c-cert-icon">📜</div>
+              <div class="c-cert-name">Verra Retirement Certificate</div>
+              <div class="c-cert-desc">Official carbon credit retirement certificate · Verra VCS Standard · Q4 FY25</div>
+              <button class="c-btn-download" onclick="simulateDownload('Verra_Retirement_Certificate_Q4FY25.pdf')">⬇ Download PDF</button>
+            </div>
+            <div class="c-cert-card">
+              <div class="c-cert-icon">🛰️</div>
+              <div class="c-cert-name">ISRO Geo-Verified Report</div>
+              <div class="c-cert-desc">Satellite imagery · NDVI heatmaps · GPS-verified farm coordinates · 2,847 plots</div>
+              <button class="c-btn-download" onclick="simulateDownload('ISRO_Satellite_Impact_Report_FY25.pdf')">⬇ Download PDF</button>
+            </div>
+            <div class="c-cert-card">
+              <div class="c-cert-icon">👨‍🌾</div>
+              <div class="c-cert-name">Farmer Impact Story Pack</div>
+              <div class="c-cert-desc">20-page narrative report · Farmer profiles, income impact, regional stories — for ESG disclosures & PR</div>
+              <button class="c-btn-download" onclick="simulateDownload('Farmer_Impact_Story_Pack_FY25.pdf')">⬇ Download PDF</button>
+            </div>
+            <div class="c-cert-card">
+              <div class="c-cert-icon">📊</div>
+              <div class="c-cert-name">Annual ESG Offset Statement</div>
+              <div class="c-cert-desc">Full-year consolidated offset ledger · Scope 1/2/3 mapping · CSRD / GRI / TCFD framework-ready</div>
+              <button class="c-btn-download" onclick="simulateDownload('Annual_ESG_Offset_Statement_FY25.pdf')">⬇ Download PDF</button>
+            </div>
+            <div class="c-cert-card">
+              <div class="c-cert-icon">⛓️</div>
+              <div class="c-cert-name">Blockchain Audit Trail</div>
+              <div class="c-cert-desc">Immutable Polygon ledger export · All credit minting, transfer & retirement transactions</div>
+              <button class="c-btn-download" onclick="simulateDownload('Polygon_Blockchain_Audit_FY25.csv')">⬇ Download CSV</button>
+            </div>
+            <div class="c-cert-card">
+              <div class="c-cert-icon">🏆</div>
+              <div class="c-cert-name">Branded ESG Badge Kit</div>
+              <div class="c-cert-desc">SVG/PNG badge assets · "Carbon Neutral via Harit Setu" · For website, annual report & press releases</div>
+              <button class="c-btn-download" onclick="simulateDownload('Harit_Setu_ESG_Badge_Kit.zip')">⬇ Download ZIP</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- FRAMEWORK COMPLIANCE -->
+        <div class="c-card">
+          <div class="c-card-header"><h3>Reporting Framework Compliance</h3></div>
+          <div class="c-framework-grid">
+            <div class="c-fw-item compliant"><span class="c-fw-check">✅</span><span class="c-fw-name">CSRD</span><span class="c-fw-status">Auto-mapped</span></div>
+            <div class="c-fw-item compliant"><span class="c-fw-check">✅</span><span class="c-fw-name">GRI Standards</span><span class="c-fw-status">Ready</span></div>
+            <div class="c-fw-item compliant"><span class="c-fw-check">✅</span><span class="c-fw-name">TCFD</span><span class="c-fw-status">Ready</span></div>
+            <div class="c-fw-item compliant"><span class="c-fw-check">✅</span><span class="c-fw-name">Verra VCS</span><span class="c-fw-status">Certified</span></div>
+            <div class="c-fw-item partial"><span class="c-fw-check">⚠️</span><span class="c-fw-name">SASB</span><span class="c-fw-status">Partial</span></div>
+            <div class="c-fw-item compliant"><span class="c-fw-check">✅</span><span class="c-fw-name">SBTi</span><span class="c-fw-status">Aligned</span></div>
+          </div>
+        </div>
+
+        <!-- FARMER STORIES -->
+        <div class="c-card">
+          <div class="c-card-header"><h3>Farmers You Supported</h3><span class="c-chip green">Impact Traceability</span></div>
+          <div class="c-farmer-stories-grid" id="farmerStoriesGrid"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== API ===== -->
+    <section class="c-tab-content" id="c-tab-api">
+      <div class="c-container">
+        <div class="c-tab-header">
+          <h2>⚙️ API & Integration</h2>
+          <p>Automate your Scope 3 offsetting workflow. Trigger credit purchases and retirements programmatically via REST API.</p>
+        </div>
+
+        <!-- API KEY -->
+        <div class="c-card">
+          <div class="c-card-header"><h3>API Key</h3><span class="c-chip blue">Production</span></div>
+          <div class="c-api-key-row">
+            <code class="c-api-key" id="apiKeyDisplay">hs_live_●●●●●●●●●●●●●●●●●●●●●●●●</code>
+            <button class="c-api-btn" id="revealApiKey">👁 Reveal</button>
+            <button class="c-api-btn" id="copyApiKey">📋 Copy</button>
+            <button class="c-api-btn danger" id="regenApiKey">🔄 Regenerate</button>
+          </div>
+          <p class="c-api-warning">⚠️ Keep this key secret. Never expose in frontend code. Use server-side only.</p>
+        </div>
+
+        <!-- USAGE STATS -->
+        <div class="c-two-col">
+          <div class="c-card">
+            <div class="c-card-header"><h3>API Usage This Month</h3></div>
+            <div class="c-api-stats">
+              <div class="c-api-stat"><strong>1,842</strong><span>Total Calls</span></div>
+              <div class="c-api-stat"><strong>98.7%</strong><span>Uptime</span></div>
+              <div class="c-api-stat"><strong>142 ms</strong><span>Avg Latency</span></div>
+              <div class="c-api-stat"><strong>48</strong><span>Credit Retirements via API</span></div>
+            </div>
+            <canvas id="apiUsageChart" height="100"></canvas>
+          </div>
+          <div class="c-card">
+            <div class="c-card-header"><h3>Webhook Configuration</h3></div>
+            <div class="c-webhook-form">
+              <label>Endpoint URL</label>
+              <input type="url" class="c-webhook-input" id="webhookUrl" placeholder="https://your-server.com/webhook/harit-setu" />
+              <label style="margin-top:.8rem">Trigger Events</label>
+              <div class="c-checkbox-group">
+                <label><input type="checkbox" checked /> credit.purchased</label>
+                <label><input type="checkbox" checked /> credit.retired</label>
+                <label><input type="checkbox" /> credit.expiring_soon</label>
+                <label><input type="checkbox" /> price.change</label>
+              </div>
+              <button class="c-btn-save-webhook">Save Webhook</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- CODE SNIPPETS -->
+        <div class="c-card">
+          <div class="c-card-header"><h3>Quick Start – Code Examples</h3></div>
+          <div class="c-code-tabs">
+            <button class="c-code-tab active" data-lang="js">JavaScript</button>
+            <button class="c-code-tab" data-lang="python">Python</button>
+            <button class="c-code-tab" data-lang="curl">cURL</button>
+          </div>
+          <div class="c-code-blocks">
+            <pre class="c-code-block active" id="code-js"><code>// Purchase carbon credits via Harit Setu API
+const response = await fetch('https://api.haritsetu.in/v1/credits/purchase', {
+  method: 'POST',
+  headers: {
+    'Authorization': 'Bearer hs_live_YOUR_API_KEY',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    quantity_tonnes: 100,
+    crop_type: 'paddy',         // or 'coconut', 'sugarcane'
+    region: 'Kerala',           // optional filter
+    min_ndvi: 0.70,             // quality filter
+    retire_immediately: false   // set true to auto-retire
+  })
+});
+
+const { credit_ids, total_cost, receipt_url } = await response.json();
+console.log('Credits purchased:', credit_ids);</code></pre>
+            <pre class="c-code-block" id="code-python"><code>import requests
+
+response = requests.post(
+    'https://api.haritsetu.in/v1/credits/purchase',
+    headers={
+        'Authorization': 'Bearer hs_live_YOUR_API_KEY',
+        'Content-Type': 'application/json'
+    },
+    json={
+        'quantity_tonnes': 100,
+        'crop_type': 'paddy',
+        'region': 'Kerala',
+        'min_ndvi': 0.70,
+        'retire_immediately': False
+    }
+)
+
+data = response.json()
+print('Credits purchased:', data['credit_ids'])</code></pre>
+            <pre class="c-code-block" id="code-curl"><code>curl -X POST https://api.haritsetu.in/v1/credits/purchase \
+  -H "Authorization: Bearer hs_live_YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "quantity_tonnes": 100,
+    "crop_type": "paddy",
+    "region": "Kerala",
+    "min_ndvi": 0.70,
+    "retire_immediately": false
+  }'</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /companyApp -->
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script type="module" src="company.js"></script>
+</body>
+</html>

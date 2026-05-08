@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Farmer Dashboard – Harit Setu</title>
+  <meta name="robots" content="noindex" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="dashboard.css" />
+</head>
+<body>
+
+  <!-- ===== AUTH LOADING SCREEN ===== -->
+  <div id="authLoader" class="auth-loader">
+    <div class="loader-content">
+      <span class="loader-leaf">🌿</span>
+      <p>Verifying farmer identity…</p>
+      <div class="loader-bar"><div class="loader-fill"></div></div>
+    </div>
+  </div>
+
+  <!-- ===== MAIN DASHBOARD (hidden until auth confirmed) ===== -->
+  <div id="dashboardApp" class="dashboard-app hidden">
+
+    <!-- TOP NAV -->
+    <header class="dash-header">
+      <div class="dash-header-left">
+        <a href="index.html" class="dash-logo">
+          <span>🌿</span> Harit Setu
+        </a>
+        <span class="dash-breadcrumb">/ Farmer Dashboard</span>
+      </div>
+      <div class="dash-header-right">
+        <div class="live-badge"><span class="live-dot"></span> Live Data</div>
+        <div class="dash-user" id="dashUserInfo">
+          <div class="user-avatar" id="dashAvatar">?</div>
+          <div class="user-details">
+            <span class="user-name" id="dashUserName">Farmer</span>
+            <span class="user-id">ID: HSFT-2024-0042</span>
+          </div>
+        </div>
+        <button class="btn-sign-out" id="signOutBtn">Sign Out</button>
+      </div>
+    </header>
+
+    <!-- TABS -->
+    <nav class="dash-tabs">
+      <button class="tab-btn active" data-tab="overview" id="tab-overview">
+        <span>📊</span> Overview
+      </button>
+      <button class="tab-btn" data-tab="revenue" id="tab-revenue">
+        <span>💰</span> Revenue & Credits
+      </button>
+      <button class="tab-btn" data-tab="satellite" id="tab-satellite">
+        <span>🛰️</span> Satellite Feed
+      </button>
+      <button class="tab-btn" data-tab="sensors" id="tab-sensors">
+        <span>🌡️</span> Sensor Readings
+      </button>
+    </nav>
+
+    <!-- ===== TAB: OVERVIEW ===== -->
+    <section class="tab-content active" id="tab-content-overview">
+      <div class="dash-container">
+
+        <div class="dash-welcome">
+          <div>
+            <h1>Good <span id="greetingTime">evening</span>, <span id="welcomeName">Farmer</span> 🌾</h1>
+            <p>Here's how your land is performing for the planet — and your wallet.</p>
+          </div>
+          <div class="last-updated">Last sync: <span id="lastUpdatedTime">--</span></div>
+        </div>
+
+        <!-- KPI CARDS -->
+        <div class="kpi-grid">
+          <div class="kpi-card green">
+            <div class="kpi-icon">💳</div>
+            <div class="kpi-body">
+              <span class="kpi-label">Total Credits Earned</span>
+              <span class="kpi-value" id="kpi-credits">₹0</span>
+              <span class="kpi-delta positive">▲ 12.4% vs last month</span>
+            </div>
+          </div>
+          <div class="kpi-card gold">
+            <div class="kpi-icon">🌍</div>
+            <div class="kpi-body">
+              <span class="kpi-label">CO₂ Sequestered</span>
+              <span class="kpi-value" id="kpi-co2">0 kg</span>
+              <span class="kpi-delta positive">▲ 8.7% this week</span>
+            </div>
+          </div>
+          <div class="kpi-card blue">
+            <div class="kpi-icon">🟢</div>
+            <div class="kpi-body">
+              <span class="kpi-label">Green Density Score</span>
+              <span class="kpi-value" id="kpi-ndvi">0%</span>
+              <span class="kpi-delta positive">NDVI index: Excellent</span>
+            </div>
+          </div>
+          <div class="kpi-card purple">
+            <div class="kpi-icon">⛓️</div>
+            <div class="kpi-body">
+              <span class="kpi-label">Credits Minted</span>
+              <span class="kpi-value" id="kpi-minted">0</span>
+              <span class="kpi-delta neutral">On Polygon blockchain</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- MINI CHARTS ROW -->
+        <div class="mini-charts-row">
+          <div class="mini-chart-card">
+            <div class="mc-header">
+              <h3>Monthly Earnings Trend</h3>
+              <span class="chip green">UPI Direct</span>
+            </div>
+            <canvas id="overviewEarningsChart" height="90"></canvas>
+          </div>
+          <div class="mini-chart-card">
+            <div class="mc-header">
+              <h3>Sensor Health</h3>
+              <span class="chip blue" id="sensorStatusChip">All Nominal</span>
+            </div>
+            <div class="sensor-mini-grid" id="sensorMiniGrid">
+              <!-- Filled by JS -->
+            </div>
+          </div>
+          <div class="mini-chart-card">
+            <div class="mc-header">
+              <h3>NDVI Trend (90 days)</h3>
+              <span class="chip gold">ISRO</span>
+            </div>
+            <canvas id="overviewNdviChart" height="90"></canvas>
+          </div>
+        </div>
+
+        <!-- RECENT TRANSACTIONS -->
+        <div class="section-card">
+          <div class="section-card-header">
+            <h3>Recent UPI Transfers</h3>
+            <button class="view-all-btn" data-goto="revenue">View All →</button>
+          </div>
+          <div class="tx-table">
+            <div class="tx-header">
+              <span>Date</span><span>Credit ID</span><span>Buyer</span><span>Amount</span><span>Status</span>
+            </div>
+            <div id="recentTxList"><!-- Filled by JS --></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===== TAB: REVENUE ===== -->
+    <section class="tab-content" id="tab-content-revenue">
+      <div class="dash-container">
+        <div class="tab-header">
+          <h2>💰 Revenue & Carbon Credits</h2>
+          <p>Detailed monthly breakdown of micro-credits sold and UPI income received.</p>
+        </div>
+
+        <!-- TOTAL EARNINGS BANNER -->
+        <div class="earnings-banner">
+          <div class="earn-stat">
+            <span class="earn-label">Total Lifetime Earnings</span>
+            <span class="earn-big" id="lifetimeEarnings">₹0</span>
+          </div>
+          <div class="earn-stat">
+            <span class="earn-label">This Month (April 2025)</span>
+            <span class="earn-big accent" id="monthEarnings">₹0</span>
+          </div>
+          <div class="earn-stat">
+            <span class="earn-label">Pending Payout</span>
+            <span class="earn-big warn" id="pendingEarnings">₹0</span>
+          </div>
+          <div class="earn-stat">
+            <span class="earn-label">Next Payout Date</span>
+            <span class="earn-big small-text">7 April 2025</span>
+          </div>
+        </div>
+
+        <!-- MONTHLY BAR CHART -->
+        <div class="section-card">
+          <div class="section-card-header">
+            <h3>Monthly Carbon Credit Revenue (₹)</h3>
+            <div class="chart-legend">
+              <span class="legend-dot green"></span> Credits Sold
+              <span class="legend-dot gold" style="margin-left:1rem"></span> Platform Fee Deducted
+            </div>
+          </div>
+          <canvas id="revenueBarChart" height="120"></canvas>
+        </div>
+
+        <!-- MONTHLY TABLE -->
+        <div class="section-card">
+          <div class="section-card-header">
+            <h3>Monthly Revenue Breakdown</h3>
+            <span class="chip green">FY 2024-25</span>
+          </div>
+          <div class="monthly-table">
+            <div class="monthly-header">
+              <span>Month</span>
+              <span>CO₂ (kg)</span>
+              <span>Credits Minted</span>
+              <span>Credits Sold</span>
+              <span>Gross (₹)</span>
+              <span>Fee (3%)</span>
+              <span>Net UPI (₹)</span>
+              <span>Status</span>
+            </div>
+            <div id="monthlyTableBody"><!-- Filled by JS --></div>
+          </div>
+        </div>
+
+        <!-- CREDIT MARKETPLACE -->
+        <div class="section-card">
+          <div class="section-card-header">
+            <h3>Minted Credits on Polygon</h3>
+            <a href="https://polygonscan.com" target="_blank" class="view-all-btn">View on PolygonScan ↗</a>
+          </div>
+          <div id="creditNFTGrid" class="credit-nft-grid"><!-- Filled by JS --></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===== TAB: SATELLITE ===== -->
+    <section class="tab-content" id="tab-content-satellite">
+      <div class="dash-container">
+        <div class="tab-header">
+          <h2>🛰️ ISRO Satellite Feed</h2>
+          <p>Real-time green density, NDVI index, and land-use analysis via ISRO Cartosat & ResourceSat imagery.</p>
+        </div>
+
+        <!-- SATELLITE STATUS BAR -->
+        <div class="satellite-status-bar">
+          <div class="sat-stat">
+            <span class="sat-stat-label">Last Pass</span>
+            <span class="sat-stat-value" id="lastPassTime">--</span>
+          </div>
+          <div class="sat-stat">
+            <span class="sat-stat-label">Satellite</span>
+            <span class="sat-stat-value">ISRO ResourceSat-2A</span>
+          </div>
+          <div class="sat-stat">
+            <span class="sat-stat-label">Resolution</span>
+            <span class="sat-stat-value">5.8 m/pixel</span>
+          </div>
+          <div class="sat-stat">
+            <span class="sat-stat-label">Cloud Cover</span>
+            <span class="sat-stat-value" id="cloudCover">--</span>
+          </div>
+          <div class="sat-stat">
+            <span class="sat-stat-label">Next Pass</span>
+            <span class="sat-stat-value" id="nextPassTime">--</span>
+          </div>
+        </div>
+
+        <div class="satellite-main-grid">
+
+          <!-- MAP VIEW -->
+          <div class="section-card sat-map-card">
+            <div class="section-card-header">
+              <h3>Farm Plot — NDVI Heatmap</h3>
+              <div class="ndvi-legend">
+                <span style="background:#ff4444"></span> Low (0-0.2)
+                <span style="background:#ffaa00"></span> Moderate (0.2-0.5)
+                <span style="background:#44cc44"></span> High (0.5-0.8)
+                <span style="background:#006600"></span> Very High (0.8+)
+              </div>
+            </div>
+            <div class="farm-map-wrapper">
+              <canvas id="ndviMapCanvas" width="560" height="320"></canvas>
+              <div class="map-overlay-info">
+                <div class="map-info-item"><span>📍</span> 10.2345°N, 76.8912°E</div>
+                <div class="map-info-item"><span>📐</span> 0.24 acres</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- NDVI GAUGES -->
+          <div class="sat-right-col">
+            <div class="section-card ndvi-summary-card">
+              <h3>Current NDVI Analysis</h3>
+              <div class="ndvi-gauge-wrap">
+                <div class="ndvi-gauge" id="ndviGauge">
+                  <svg viewBox="0 0 120 70" class="gauge-svg">
+                    <path d="M10 60 A50 50 0 0 1 110 60" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="10" stroke-linecap="round"/>
+                    <path id="gaugeFill" d="M10 60 A50 50 0 0 1 110 60" fill="none" stroke="url(#gaugeGrad)" stroke-width="10" stroke-linecap="round" stroke-dasharray="157" stroke-dashoffset="50"/>
+                    <defs>
+                      <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#ff4444"/>
+                        <stop offset="50%" stop-color="#ffaa00"/>
+                        <stop offset="100%" stop-color="#22c55e"/>
+                      </linearGradient>
+                    </defs>
+                    <text x="60" y="58" text-anchor="middle" font-size="18" font-weight="800" fill="#22c55e" id="gaugeText">0.74</text>
+                    <text x="60" y="68" text-anchor="middle" font-size="6" fill="#7aab7a">NDVI INDEX</text>
+                  </svg>
+                </div>
+              </div>
+              <div class="ndvi-breakdown">
+                <div class="ndvi-row"><span>Paddy Field</span><div class="ndvi-bar-wrap"><div class="ndvi-mini-bar" style="width:82%;background:#22c55e"></div></div><span>82%</span></div>
+                <div class="ndvi-row"><span>Coconut Grove</span><div class="ndvi-bar-wrap"><div class="ndvi-mini-bar" style="width:91%;background:#16a34a"></div></div><span>91%</span></div>
+                <div class="ndvi-row"><span>Vegetable Plot</span><div class="ndvi-bar-wrap"><div class="ndvi-mini-bar" style="width:67%;background:#f59e0b"></div></div><span>67%</span></div>
+                <div class="ndvi-row"><span>Bare Soil</span><div class="ndvi-bar-wrap"><div class="ndvi-mini-bar" style="width:8%;background:#ef4444"></div></div><span>8%</span></div>
+              </div>
+            </div>
+
+            <div class="section-card">
+              <h3>Tree & Vegetation Count</h3>
+              <div class="veg-count-grid">
+                <div class="veg-item"><span class="veg-emoji">🌴</span><span class="veg-num" id="coconutCount">0</span><span class="veg-label">Coconut</span></div>
+                <div class="veg-item"><span class="veg-emoji">🌾</span><span class="veg-num" id="paddyArea">0 m²</span><span class="veg-label">Paddy Area</span></div>
+                <div class="veg-item"><span class="veg-emoji">🌳</span><span class="veg-num" id="treeCount">0</span><span class="veg-label">Trees</span></div>
+                <div class="veg-item"><span class="veg-emoji">🌿</span><span class="veg-num" id="biomassKg">0 kg</span><span class="veg-label">Est. Biomass</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- NDVI HISTORY CHART -->
+        <div class="section-card">
+          <div class="section-card-header">
+            <h3>NDVI Index – 12 Month History</h3>
+            <span class="chip gold">Verra-Compatible</span>
+          </div>
+          <canvas id="ndviHistoryChart" height="110"></canvas>
+        </div>
+
+        <!-- SATELLITE PASSES LOG -->
+        <div class="section-card">
+          <div class="section-card-header">
+            <h3>Recent Satellite Passes</h3>
+          </div>
+          <div id="satellitePassLog" class="pass-log"><!-- Filled by JS --></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===== TAB: SENSORS ===== -->
+    <section class="tab-content" id="tab-content-sensors">
+      <div class="dash-container">
+        <div class="tab-header">
+          <h2>🌡️ IoT Coir Sensor Network</h2>
+          <p>Live readings from ₹10 proprietary coir sensors placed across your farm. Auto-updating every 60 seconds.</p>
+        </div>
+
+        <!-- SENSOR ARRAY STATUS -->
+        <div class="sensor-array-header">
+          <div class="sensor-network-info">
+            <span class="chip green">🟢 Network Online</span>
+            <span class="sensor-meta">4/4 sensors active</span>
+            <span class="sensor-meta">Last sync: <span id="sensorLastSync">--</span></span>
+          </div>
+          <button class="btn-refresh" id="refreshSensors">⟳ Refresh Now</button>
+        </div>
+
+        <!-- SENSOR CARDS GRID -->
+        <div class="sensor-cards-grid" id="sensorCardsGrid">
+          <!-- Filled by JS -->
+        </div>
+
+        <!-- CO2 CHART -->
+        <div class="section-card">
+          <div class="section-card-header">
+            <h3>CO₂ Absorption – 24 Hour Trend</h3>
+            <div class="chart-legend">
+              <span class="legend-dot green"></span> Sensor Avg (ppm absorbed)
+              <span class="legend-dot blue" style="margin-left:1rem"></span> Baseline
+            </div>
+          </div>
+          <canvas id="co2TrendChart" height="110"></canvas>
+        </div>
+
+        <!-- SOIL & MOISTURE -->
+        <div class="dual-chart-row">
+          <div class="section-card">
+            <div class="section-card-header"><h3>Soil Carbon Content (%)</h3><span class="chip green">Trending Up</span></div>
+            <canvas id="soilCarbonChart" height="110"></canvas>
+          </div>
+          <div class="section-card">
+            <div class="section-card-header"><h3>Soil Moisture Levels (%)</h3><span class="chip blue">Optimal</span></div>
+            <canvas id="soilMoistureChart" height="110"></canvas>
+          </div>
+        </div>
+
+        <!-- SENSOR LOG TABLE -->
+        <div class="section-card">
+          <div class="section-card-header">
+            <h3>Sensor Event Log</h3>
+            <span class="chip" style="background:rgba(255,255,255,0.06);color:#a5c8a5">Last 20 events</span>
+          </div>
+          <div class="sensor-log" id="sensorEventLog"><!-- Filled by JS --></div>
+        </div>
+
+      </div>
+    </section>
+
+  </div><!-- /dashboardApp -->
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <!-- Firebase -->
+  <script type="module" src="dashboard.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,15 @@
+# Firebase
+.firebase/
+
+# Dependencies
+node_modules/
+
+# Team photos (privacy)
+public/team/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Harit Setu – The Green Bridge | Backyard to Blockchain</title>
+  <meta name="description"
+    content="Harit Setu makes every Indian farmer a carbon entrepreneur. From ₹10 IoT sensors to blockchain carbon credits, we bridge the gap between paddy fields and global markets." />
+  <meta property="og:title" content="Harit Setu – The Green Bridge" />
+  <meta property="og:description"
+    content="12 crore farmers. ₹8.5 Lakh Crore opportunity. Join the Carbon Revolution." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- ===== AUTH MODAL ===== -->
+  <div id="authOverlay" class="auth-overlay hidden">
+    <div class="auth-modal">
+      <button class="auth-close" id="closeAuth" aria-label="Close">&times;</button>
+      <div class="auth-logo">
+        <span class="logo-leaf">🌿</span>
+        <span>Harit Setu</span>
+      </div>
+
+      <!-- STEP 1: ROLE PICKER -->
+      <div id="rolePickerStep">
+        <h2>Join as…</h2>
+        <p id="authSubtitle" style="text-align:center;margin-bottom:1.5rem">Select your role to continue</p>
+        <div class="role-picker-grid">
+          <button class="role-card" id="rolePickerFarmer" data-role="farmer">
+            <div class="role-icon">🌾</div>
+            <div class="role-title">Farmer</div>
+            <div class="role-desc">Access your carbon credit earnings, satellite feed &amp; sensor readings</div>
+            <div class="role-arrow">→</div>
+          </button>
+          <button class="role-card" id="rolePickerCompany" data-role="company">
+            <div class="role-icon">🏢</div>
+            <div class="role-title">Company / MNC</div>
+            <div class="role-desc">Buy carbon offsets, access ESG reports &amp; API integrations</div>
+            <div class="role-arrow">→</div>
+          </button>
+        </div>
+      </div>
+
+      <!-- STEP 2: AUTH FORMS (hidden until role chosen) -->
+      <div id="authStep" class="hidden">
+        <button class="auth-back-btn" id="backToRolePicker">← Change role</button>
+        <div class="auth-role-badge" id="authRoleBadge"></div>
+        <h2 id="authTitle">Welcome Back</h2>
+        <p id="authSubtitleForm" style="text-align:center;color:#7aab7a;font-size:0.9rem;margin-bottom:1.2rem">Sign in
+          to your dashboard</p>
+
+        <!-- Google Sign In -->
+        <button class="btn-google" id="googleSignInBtn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path
+              d="M23.766 12.277c0-.816-.066-1.636-.207-2.438H12.24v4.621h6.482a5.544 5.544 0 01-2.404 3.64v3.02h3.892c2.276-2.097 3.556-5.184 3.556-8.843z"
+              fill="#4285F4" />
+            <path
+              d="M12.24 24c3.24 0 5.963-1.07 7.95-2.88l-3.892-3.02c-1.077.72-2.455 1.14-4.058 1.14-3.12 0-5.762-2.108-6.706-4.942H1.516v3.117A12.001 12.001 0 0012.24 24z"
+              fill="#34A853" />
+            <path d="M5.534 14.298a7.205 7.205 0 010-4.596V6.585H1.516a12.01 12.01 0 000 10.83l4.018-3.117z"
+              fill="#FBBC04" />
+            <path
+              d="M12.24 4.773a6.495 6.495 0 014.594 1.796l3.417-3.417A11.533 11.533 0 0012.24 0 12.001 12.001 0 001.516 6.585l4.018 3.117c.94-2.834 3.586-4.929 6.706-4.929z"
+              fill="#EA4335" />
+          </svg>
+          Continue with Google
+        </button>
+
+        <div class="auth-divider"><span>or</span></div>
+
+        <div id="authForms">
+          <form id="loginForm" class="auth-form" method="post">
+            <div class="input-group">
+              <label for="loginEmail">Email</label>
+              <input type="email" id="loginEmail" placeholder="you@example.com" required autocomplete="username" />
+            </div>
+            <div class="input-group">
+              <label for="loginPassword">Password</label>
+              <input type="password" id="loginPassword" placeholder="••••••••" required minlength="8" autocomplete="current-password" />
+              <button type="button" class="toggle-pw" id="toggleLoginPw">Show</button>
+            </div>
+            <button type="submit" class="btn-auth-primary" id="loginSubmitBtn">Sign In</button>
+            <p class="auth-switch">New here? <span id="goToSignup">Create account</span></p>
+            <p class="auth-switch"><span id="goToForgot">Forgot password?</span></p>
+          </form>
+
+          <form id="signupForm" class="auth-form hidden" method="post">
+            <div class="input-group">
+              <label for="signupName">Full Name</label>
+              <input type="text" id="signupName" placeholder="Your Name" required autocomplete="name" />
+            </div>
+            <div class="input-group">
+              <label for="signupEmail">Email</label>
+              <input type="email" id="signupEmail" placeholder="you@example.com" required autocomplete="email" />
+            </div>
+            <div class="input-group">
+              <label for="signupPassword">Password</label>
+              <input type="password" id="signupPassword" placeholder="Min 8 characters" required minlength="8" autocomplete="new-password" />
+              <button type="button" class="toggle-pw" id="toggleSignupPw">Show</button>
+            </div>
+            <div class="input-group">
+              <label for="signupConfirm">Confirm Password</label>
+              <input type="password" id="signupConfirm" placeholder="Repeat password" required minlength="8" autocomplete="new-password" />
+            </div>
+            <button type="submit" class="btn-auth-primary" id="signupSubmitBtn">Create Account</button>
+            <p class="auth-switch">Already have an account? <span id="goToLogin">Sign in</span></p>
+          </form>
+
+          <form id="forgotForm" class="auth-form hidden" method="post">
+            <div class="input-group">
+              <label for="forgotEmail">Email</label>
+              <input type="email" id="forgotEmail" placeholder="you@example.com" required />
+            </div>
+            <button type="submit" class="btn-auth-primary" id="forgotSubmitBtn">Send Reset Link</button>
+            <p class="auth-switch"><span id="backToLogin">← Back to Sign In</span></p>
+          </form>
+        </div>
+
+        <p class="auth-error hidden" id="authError"></p>
+        <p class="auth-success hidden" id="authSuccess"></p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== NAVBAR ===== -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="#hero" class="nav-logo">
+        <span class="logo-leaf">🌿</span>
+        <span class="logo-text">Harit Setu</span>
+      </a>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#problem">Problem</a></li>
+        <li><a href="#solution">How It Works</a></li>
+        <li><a href="#market">Market</a></li>
+        <li><a href="#impact">Impact</a></li>
+        <li><a href="#team">Team</a></li>
+        <li><a href="dashboard.html" class="nav-link-dashboard" id="navDashboard" style="display:none">🌾 My
+            Dashboard</a></li>
+        <li><a href="#" class="nav-cta" id="navSignIn">Sign In</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ===== HERO SECTION ===== -->
+  <section class="hero" id="hero">
+    <div class="hero-particles" id="particles"></div>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="badge-dot"></span> India's First Micro-Carbon Credit Platform
+      </div>
+      <h1 class="hero-headline">Backyard to Blockchain.<br /><span class="headline-accent">12 crore farmers
+          waiting.</span></h1>
+      <p class="hero-subheadline">From climate-vulnerable to climate-profitable, Harit Setu makes every farmer a
+        <strong>carbon entrepreneur.</strong>
+      </p>
+      <div class="hero-stats">
+        <div class="stat-pill"><span class="stat-num">₹8.5L Cr</span><span class="stat-label">TAM</span></div>
+        <div class="stat-pill"><span class="stat-num">$23B</span><span class="stat-label">Global Demand</span></div>
+        <div class="stat-pill"><span class="stat-num">12 Cr</span><span class="stat-label">Farmers</span></div>
+      </div>
+      <div class="hero-ctas">
+        <a href="#" class="btn-primary" id="downloadAppBtn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.7 9.05 7.4c1.36.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.39-1.32 2.76-2.54 3.99zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z" />
+          </svg>
+          Download the Free App
+        </a>
+        <a href="#" class="btn-secondary" id="partnerMNCBtn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+          </svg>
+          Partner as an MNC
+        </a>
+      </div>
+      <div class="hero-trust">
+        <span>Powered by</span>
+        <span class="trust-badge">🛰️ ISRO</span>
+        <span class="trust-badge">⛓️ Polygon</span>
+        <span class="trust-badge">✅ Verra</span>
+        <span class="trust-badge">💳 UPI</span>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="globe-wrapper">
+        <div class="globe">
+          <div class="globe-ring ring-1"></div>
+          <div class="globe-ring ring-2"></div>
+          <div class="globe-ring ring-3"></div>
+          <div class="globe-core">
+            <span class="globe-emoji">🌾</span>
+          </div>
+          <div class="orbit-dot dot-1">🛰️</div>
+          <div class="orbit-dot dot-2">⛓️</div>
+          <div class="orbit-dot dot-3">📱</div>
+          <div class="orbit-dot dot-4">💰</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <span>Scroll to explore</span>
+      <div class="scroll-arrow"></div>
+    </div>
+  </section>
+
+  <!-- ===== PROBLEM SECTION ===== -->
+  <section class="section problem-section" id="problem">
+    <div class="container">
+      <div class="section-tag">The Crisis</div>
+      <h2 class="section-title">India's Carbon Market <span class="text-red">Bleeds ₹84,000 Crore</span><br />While
+        Farmers Stay Trapped</h2>
+      <p class="section-subtitle">The global carbon credit market is booming — yet 12 crore small Indian farmers receive
+        <em>zero</em> benefit. Here's why the system is broken.
+      </p>
+
+      <div class="problem-hero-stat">
+        <div class="loss-counter">
+          <span class="loss-amount">₹84,000 Cr</span>
+          <span class="loss-label">Annual opportunity loss for Indian agriculture</span>
+        </div>
+      </div>
+
+      <div class="problem-cards">
+        <div class="problem-card" id="prob-1">
+          <div class="prob-icon">🪤</div>
+          <div class="prob-tag">Barrier 01</div>
+          <h3>The ₹5 Lakh Audit Death Trap</h3>
+          <p>Verra certification costs <strong>₹5 Lakh+</strong> per audit cycle — more than most small farmers earn in
+            a year. The system literally prices them out before they start.</p>
+          <div class="prob-stat"><span>₹5L+</span> audit cost vs <span>₹2-3L</span> average farm income</div>
+        </div>
+        <div class="problem-card" id="prob-2">
+          <div class="prob-icon">🔍</div>
+          <div class="prob-tag">Barrier 02</div>
+          <h3>Micro-Farm Invisibility</h3>
+          <p>Traditional carbon platforms require minimum <strong>50-acre plots</strong>. India's average farm size is
+            just <strong>0.25 acres</strong>. Small farmers are simply invisible to current systems.</p>
+          <div class="prob-stat"><span>0.25 Ac</span> avg farm vs <span>50 Ac+</span> minimum required</div>
+        </div>
+        <div class="problem-card" id="prob-3">
+          <div class="prob-icon">📚</div>
+          <div class="prob-tag">Barrier 03</div>
+          <h3>The Carbon Illiteracy Crisis</h3>
+          <p>Complex technical jargon, English-only documentation, and zero last-mile support leave farmers unable to
+            navigate even basic carbon credit concepts.</p>
+          <div class="prob-stat"><span>&lt;1%</span> of farmers know about carbon credits</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SOLUTION / HOW IT WORKS ===== -->
+  <section class="section solution-section" id="solution">
+    <div class="container">
+      <div class="section-tag">Our Solution</div>
+      <h2 class="section-title">The <span class="text-green">4-Step Pipeline</span><br />That Changes Everything</h2>
+      <p class="section-subtitle">From a ₹10 sensor in a paddy field to a blockchain-verified carbon credit — end to end
+        in 72 hours.</p>
+
+      <div class="pipeline">
+        <div class="pipeline-connector"></div>
+
+        <div class="step-card" id="step-1">
+          <div class="step-number">01</div>
+          <div class="step-icon-wrap">
+            <div class="step-icon">🌡️</div>
+          </div>
+          <div class="step-content">
+            <div class="step-tag">IoT Sensing</div>
+            <h3>₹10 Coir Sensors</h3>
+            <p>Our proprietary low-cost IoT sensors — made with coir fibre — are distributed to farmers for just
+              <strong>₹10</strong>. They continuously monitor CO₂ absorption, soil carbon, and microclimate data from
+              backyard farms 24/7.
+            </p>
+            <div class="step-tech">
+              <span class="tech-tag">IoT</span>
+              <span class="tech-tag">Coir Tech</span>
+              <span class="tech-tag">CO₂ Monitor</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-card" id="step-2">
+          <div class="step-number">02</div>
+          <div class="step-icon-wrap">
+            <div class="step-icon">🛰️</div>
+          </div>
+          <div class="step-content">
+            <div class="step-tag">Verification</div>
+            <h3>ISRO Precision & AI</h3>
+            <p>Farmer uploads a paddy photo with GPS coordinates. Our AI model cross-references this with <strong>ISRO
+                satellite imagery</strong>, validates carbon sequestration claims, and prepares Verra-ready
+              documentation automatically.</p>
+            <div class="step-tech">
+              <span class="tech-tag">ISRO Satellite</span>
+              <span class="tech-tag">Computer Vision</span>
+              <span class="tech-tag">Verra-Ready</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-card" id="step-3">
+          <div class="step-number">03</div>
+          <div class="step-icon-wrap">
+            <div class="step-icon">⛓️</div>
+          </div>
+          <div class="step-content">
+            <div class="step-tag">Minting</div>
+            <h3>Blockchain Minting</h3>
+            <p>A <strong>Polygon smart contract</strong> mints micro-credits — fractional carbon tokens representing
+              even 0.01 tonnes of CO₂. Each credit is immutable, traceable, and listed for global buyers. Zero fraud.
+              Zero double-counting.</p>
+            <div class="step-tech">
+              <span class="tech-tag">Polygon</span>
+              <span class="tech-tag">Smart Contracts</span>
+              <span class="tech-tag">NFT Credits</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-card" id="step-4">
+          <div class="step-number">04</div>
+          <div class="step-icon-wrap">
+            <div class="step-icon">💸</div>
+          </div>
+          <div class="step-content">
+            <div class="step-tag">Payments</div>
+            <h3>Daily UPI Dopamine</h3>
+            <p>When a credit sells, funds are pushed <strong>instantly to the farmer's wallet via UPI</strong>. No bank
+              visits. No middlemen. No delays. Just a notification that their paddy patch is now earning global dollars
+              — every single day.</p>
+            <div class="step-tech">
+              <span class="tech-tag">UPI Direct</span>
+              <span class="tech-tag">Instant Payout</span>
+              <span class="tech-tag">Zero Middlemen</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== MARKET & BUSINESS MODEL ===== -->
+  <section class="section market-section" id="market">
+    <div class="container">
+      <div class="section-tag">The Opportunity</div>
+      <h2 class="section-title">A <span class="text-gold">₹8.5 Lakh Crore</span> Market<br />Nobody's Serving Right</h2>
+
+      <div class="market-grid">
+        <div class="market-stat-card">
+          <div class="market-icon">🌍</div>
+          <h3>₹8.5 Lakh Crore</h3>
+          <p>Total Addressable Market in India across agriculture and forestry carbon sequestration</p>
+          <div class="market-bar">
+            <div class="bar-fill" style="width:85%"></div>
+          </div>
+        </div>
+        <div class="market-stat-card featured">
+          <div class="market-icon">💹</div>
+          <h3>$23 Billion</h3>
+          <p>Global voluntary carbon market demand — growing at 36% CAGR — starved of quality supply</p>
+          <div class="market-bar">
+            <div class="bar-fill" style="width:70%"></div>
+          </div>
+        </div>
+        <div class="market-stat-card">
+          <div class="market-icon">👨‍🌾</div>
+          <h3>12 Crore</h3>
+          <p>Small & marginal farmers ready to participate — a supply base no other platform can unlock</p>
+          <div class="market-bar">
+            <div class="bar-fill" style="width:60%"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="revenue-section">
+        <h3 class="revenue-title">Revenue Streams</h3>
+        <div class="revenue-cards">
+          <div class="revenue-card">
+            <div class="rev-icon">💰</div>
+            <h4>Platform Transaction Fee</h4>
+            <p>3% fee on every carbon credit sold through the Harit Setu marketplace — frictionless, automatic,
+              scalable.</p>
+            <span class="rev-badge">Primary Revenue</span>
+          </div>
+          <div class="revenue-card">
+            <div class="rev-icon">✈️</div>
+            <h4>Airline & MNC Offset APIs</h4>
+            <p>Volume deals via enterprise APIs for airlines and corporations needing bulk Scope 3 offsets at
+              competitive rates.</p>
+            <span class="rev-badge">B2B Revenue</span>
+          </div>
+          <div class="revenue-card">
+            <div class="rev-icon">🏆</div>
+            <h4>Branded ESG Certificates</h4>
+            <p>Premium white-label ESG impact certificates with ISRO satellite imagery and farmer story — for corporates
+              that want to show, not just offset.</p>
+            <span class="rev-badge">Premium Revenue</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SDG SECTION ===== -->
+  <section class="section sdg-section" id="impact">
+    <div class="container">
+      <div class="section-tag">Sustainability</div>
+      <h2 class="section-title">Advancing <span class="text-green">UN SDGs</span><br />One Farm at a Time</h2>
+      <p class="section-subtitle">Harit Setu is built to deliver measurable impact across six United Nations Sustainable
+        Development Goals.</p>
+
+      <div class="sdg-grid">
+        <div class="sdg-card">
+          <div class="sdg-badge sdg-2">SDG 2</div>
+          <div class="sdg-emoji">🌾</div>
+          <h4>Zero Hunger</h4>
+          <p>Carbon income supplements farm revenue, enabling farmers to invest in better seeds, irrigation, and
+            nutrition.</p>
+        </div>
+        <div class="sdg-card">
+          <div class="sdg-badge sdg-8">SDG 8</div>
+          <div class="sdg-emoji">💼</div>
+          <h4>Decent Work & Growth</h4>
+          <p>Creates dignified, passive income streams for 12 crore marginalised agricultural workers without displacing
+            livelihoods.</p>
+        </div>
+        <div class="sdg-card">
+          <div class="sdg-badge sdg-9">SDG 9</div>
+          <div class="sdg-emoji">🏗️</div>
+          <h4>Industry & Innovation</h4>
+          <p>Bridges frontier tech — IoT, AI, satellite, blockchain — into India's rural agriculture infrastructure for
+            the first time.</p>
+        </div>
+        <div class="sdg-card">
+          <div class="sdg-badge sdg-12">SDG 12</div>
+          <div class="sdg-emoji">♻️</div>
+          <h4>Responsible Consumption</h4>
+          <p>Enables corporations to meet Net Zero targets with verified, traceable, high-quality Indian agricultural
+            carbon credits.</p>
+        </div>
+        <div class="sdg-card">
+          <div class="sdg-badge sdg-13">SDG 13</div>
+          <div class="sdg-emoji">🌍</div>
+          <h4>Climate Action</h4>
+          <p>Directly accelerates carbon sequestration at scale, making Indian farm land a major climate solution rather
+            than a victim.</p>
+        </div>
+        <div class="sdg-card">
+          <div class="sdg-badge sdg-17">SDG 17</div>
+          <div class="sdg-emoji">🤝</div>
+          <h4>Partnerships for Goals</h4>
+          <p>Connects governments, MNCs, airlines, NGOs, and farmers in one transparent, tech-mediated partnership
+            ecosystem.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TEAM SECTION ===== -->
+  <section class="section team-section" id="team">
+    <div class="container">
+      <div class="section-tag">Meta Squad</div>
+      <h2 class="section-title">The Team <span class="text-green">Behind the Bridge</span></h2>
+
+      <div class="team-quote-banner">
+        <div class="quote-mark">"</div>
+        <p>"From Kerala farms to global carbon markets — we understand farmers, code trust, bridge worlds. Ready to
+          scale green wealth nationwide."</p>
+        <div class="quote-mark end">"</div>
+      </div>
+
+      <div class="team-grid">
+        <div class="team-card" id="member-1">
+          <div class="team-avatar">
+            <div class="avatar-ring"></div>
+            <img class="avatar-photo" src="team/athul.png" alt="Athul Krishna Girish"
+              onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="avatar-inner" style="display:none">AK</div>
+          </div>
+          <div class="team-info">
+            <h3>Athul Krishna Girish</h3>
+            <span class="team-role">Chief Executive Officer</span>
+            <p>Visionary leader bridging the gap between rural farming realities and global climate finance
+              opportunities.</p>
+          </div>
+          <div class="team-socials">
+            <a href="https://www.linkedin.com/in/athulkrishnagirish/" class="social-btn" aria-label="LinkedIn"
+              target="_blank">in</a>
+          </div>
+        </div>
+
+        <div class="team-card" id="member-2">
+          <div class="team-avatar">
+            <div class="avatar-ring"></div>
+            <img class="avatar-photo" src="team/helen.png" alt="Helen Martin Jose"
+              onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="avatar-inner" style="display:none">HM</div>
+          </div>
+          <div class="team-info">
+            <h3>Helen Martin Jose</h3>
+            <span class="team-role">Chief Operating Officer</span>
+            <p>Operations strategist ensuring seamless last-mile farmer onboarding at scale across India's diverse
+              agro-regions.</p>
+          </div>
+          <div class="team-socials">
+            <a href="https://www.linkedin.com/in/helen-martin-jose-71a784351" class="social-btn" aria-label="LinkedIn"
+              target="_blank">in</a>
+          </div>
+        </div>
+
+        <div class="team-card" id="member-3">
+          <div class="team-avatar">
+            <div class="avatar-ring"></div>
+            <img class="avatar-photo" src="team/nazrin.png" alt="Nazrin MN"
+              onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="avatar-inner" style="display:none">NM</div>
+          </div>
+          <div class="team-info">
+            <h3>Nazrin MN</h3>
+            <span class="team-role">Chief Technical Officer</span>
+            <p>Blockchain architect and AI engineer who built the Polygon smart contracts and ISRO satellite integration
+              pipeline.</p>
+          </div>
+          <div class="team-socials">
+            <a href="https://www.linkedin.com/in/nazrin-m-n-1370771b8/" class="social-btn" aria-label="LinkedIn"
+              target="_blank">in</a>
+          </div>
+        </div>
+
+        <div class="team-card" id="member-4">
+          <div class="team-avatar">
+            <div class="avatar-ring"></div>
+            <img class="avatar-photo" src="team/yadu.png" alt="Yadu Krishnan.S"
+              onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="avatar-inner" style="display:none">YK</div>
+          </div>
+          <div class="team-info">
+            <h3>Yadu Krishnan.S</h3>
+            <span class="team-role">Chief Marketing Officer</span>
+            <p>Growth hacker building Harit Setu's brand across farmer communities, MNC boardrooms, and ESG investment
+              circles.</p>
+          </div>
+          <div class="team-socials">
+            <a href="https://www.linkedin.com/in/yadu-krishnan-s-571b2332a" class="social-btn" aria-label="LinkedIn"
+              target="_blank">in</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FINAL CTA ===== -->
+  <section class="section final-cta-section">
+    <div class="container">
+      <div class="final-cta-card">
+        <div class="cta-glow"></div>
+        <div class="cta-tag">Join the Movement</div>
+        <h2>Ready to join the<br /><span>Carbon Revolution?</span></h2>
+        <p>Whether you're a farmer with a backyard farm or a corporation with Net Zero targets — Harit Setu has a role
+          for you.</p>
+        <div class="cta-buttons">
+          <a href="#" class="btn-primary large" id="finalDownloadBtn">Download Free App</a>
+          <a href="#" class="btn-outline large" id="finalPartnerBtn">Corporate Offsets →</a>
+        </div>
+        <div class="cta-numbers">
+          <span>🌱 Join <strong>2,400+</strong> early farmers</span>
+          <span>🏢 <strong>16 MNCs</strong> in pipeline</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer" id="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <span class="logo-leaf">🌿</span>
+            <span>Harit Setu</span>
+          </div>
+          <p>The Green Bridge between India's 12 crore farmers and the global carbon market. Building climate-profitable
+            agriculture, one credit at a time.</p>
+          <div class="footer-socials">
+            <a href="#" aria-label="Twitter" class="footer-social">𝕏</a>
+            <a href="#" aria-label="LinkedIn" class="footer-social">in</a>
+            <a href="#" aria-label="Instagram" class="footer-social">▣</a>
+          </div>
+        </div>
+
+        <div class="footer-links">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#problem">About Us</a></li>
+            <li><a href="#team">Our Team</a></li>
+            <li><a href="#impact">Impact Report</a></li>
+            <li><a href="#" id="footerSignIn">Farmer Portal</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-links">
+          <h4>Products</h4>
+          <ul>
+            <li><a href="#" id="footerDownload">App Download</a></li>
+            <li><a href="#market">Corporate Offsets</a></li>
+            <li><a href="#market">ESG Certificates</a></li>
+            <li><a href="#solution">API Access</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-links">
+          <h4>Connect</h4>
+          <ul>
+            <li><a href="mailto:hello@haritsetu.in">hello@haritsetu.in</a></li>
+            <li><a href="#">Press Kit</a></li>
+            <li><a href="#">Partnerships</a></li>
+            <li><a href="#">Contact Us</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2025 Harit Setu Technologies Pvt. Ltd. All rights reserved.</p>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Cookie Policy</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Firebase SDK -->
+  <script type="module" src="app.js"></script>
+</body>
+
+</html>
